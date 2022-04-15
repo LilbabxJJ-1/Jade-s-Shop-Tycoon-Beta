@@ -112,7 +112,7 @@ def signup():
     global password
     global logins
     var.username = "."
-    print("\nUser SignUp\n")
+    print(colored("\nUser SignUp","green"))
     while var.username != "":
         var.username = input("Username: ")
         try:
