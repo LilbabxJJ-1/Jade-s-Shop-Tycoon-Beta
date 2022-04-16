@@ -9,16 +9,24 @@ import var
 
  
 def inv_tutorial():
+  replit.clear()
   print(f"{var.username}'s Inventory")
   print("-------------------------------")
-  print("")
-
+  for i in var.items:
+    print(f"{i} - {var.items[i]}")
+  var.mycol.insert_one(var.items)
+  time.sleep(1.5)
+  print("This is your inventory! Small but can grow quickly with a bit of help!")
+  time.sleep(1.5)
+  print("If you ever need to see the description of a item, you can always ")
+  
+  
 def tutorial():
   replit.clear()
   go_to = None
-  print(f"{var.users} Shopˏˋ°•*⁀➷")
+  print(f"{var.username}'s Shopˏˋ°•*⁀➷")
   print("--------------------------")
-  print("[1]Inventory\n[2]Orders\n[3]Buy\n[4]Sell\n")
+  print("[1]Inventory\n[2]Orders\n[3]Buy\n[4]Sell")
   time.sleep(2.5)
   print(colored(f"This is your own shop! You can check your inventory..", "cyan"))
   time.sleep(2.5)
@@ -29,11 +37,10 @@ def tutorial():
   print("We're gonna do the tutorial first! Please enter option 1 to start with inventory!")
   while go_to == None:
     try:
-      go_to = int(input(' '))
+      go_to = int(input(''))
       if go_to == 1:
         inv_tutorial()
       elif go_to == 2:
-        
         quit()
       else:
         print("Please try that again! Put the number 1")
@@ -46,7 +53,7 @@ def intro():
   replit.clear()
   italics = '\033[3m'
   end = '\033[0m'
-  print(colored(f"Hey! It's you!! I've been waiting a long bit for you to arrive, {users}, right?", "cyan"))
+  print(colored(f"Hey! It's you!! I've been waiting a long bit for you to arrive, {var.username}, right?", "cyan"))
   time.sleep(4)
   print(colored(f"I'm Jade, the very very very amazing shop owner! I'm the best at literally everything I do! I-.. {italics}Jade notices her ranmbling quickly fixes her posture.{end}", "cyan"))
   print(colored("Sorry!! Anyways, you're new around, yeah? I'm excited to see a new shop owner in the making! Check out everything and come back to me when you're ready!", "cyan"))
@@ -164,9 +171,12 @@ def menu():
      print("[1]Play \n[2]Stats \n[3]Exit/Log Out")
      choice = int(input(""))
      if choice == 1:
-       result = var.mycol.find({"username": var.username})
-       for i in result:
-          if i["Tutorial_Passed"] == False:
+       if var.username == "Guest":
+         intro()
+       else:  
+         result = var.mycol.find({"username": var.username})
+         for i in result:
+          if i["Tutorial_Passed"] == "False":
             intro()
      elif choice == 2:
        status()

@@ -11,3 +11,4 @@ password = None
 logins = False
 tutorial_passed = False
 
+items = {"Item_holder": username, "Coffee" : 1, "Bagel": 1, "Muffin": 1, "Chocolate": 0}
