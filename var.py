@@ -4,12 +4,18 @@ with open("file.txt", "r") as f:
     my_secs = line
 
 client = pymongo.MongoClient(f"mongodb+srv://Jade:{my_secs}@cluster0.ajcet.mongodb.net/cluster0?retryWrites=true&w=majority")
+go_to = None
 mydb = client["mydatabase"]
 mycol = mydb["users"]
 username = "Unknown"
 password = None
 logins = False
 tutorial_passed = False
+intro_passed = False
+pt1 = False
+pt2 = False
+pt3 = False
+pt4 = False
 item_descriptions = {"coffee": 
                      "Coffe: A cheap bevarage that anyone can come in to buy as a daily drink.",
                      "bagel":

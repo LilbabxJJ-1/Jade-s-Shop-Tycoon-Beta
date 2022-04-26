@@ -8,6 +8,11 @@ import options
 import var
 
 
+
+def or_tutorial():
+  pass
+    
+
 def inv_tutorial():
     replit.clear()
     print(f"{var.username}'s Inventory")
@@ -18,7 +23,8 @@ def inv_tutorial():
             pass
         else:
             print(f"{i} - {var.items[i]}")
-    var.mycol.insert_one(var.items)
+    if var.username !="Guest":
+       var.mycol.insert_one(var.items)
     time.sleep(1.5)
     print(
         "This is your inventory! Small but can grow quickly with a bit of help!"
@@ -29,72 +35,110 @@ def inv_tutorial():
     description = None
     while description is None:
         description = input("Item name: ")
-        if description.lower() in var.item_descriptions:
+        if description.title() in var.items:
+         while description != None:
           try:
             print(var.item_descriptions[description.lower()])
             break
+            
           except KeyError:
             print("That item does not have a description yet!")
+            description = None
+            
         else:
             print("\nItem does not exist! Try again!")
             description = None
+    q = {"username": var.username}
+    result = var.mycol.find({"username": var.username})
+    for i in result:
+      if i["pt1"] == False:
+        var.mycol.update_one(q, { "$set": {"pt1": True}})
+    tutorial()
 
 
 def tutorial():
-    replit.clear()
-    go_to = None
-    print(f"{var.username}'s Shopˏˋ°•*⁀➷")
-    print("--------------------------")
-    print("[1]Inventory\n[2]Orders\n[3]Buy\n[4]Sell")
-    time.sleep(2.5)
-    print(
-        colored(f"This is your own shop! You can check your inventory..",
-                "cyan"))
-    time.sleep(2.5)
-    print(colored("Buy things!", "green"))
-    time.sleep(2.5)
-    print(
-        colored("Check incoming orders! And so much more! (Coming soon..)",
-                "red"))
-    time.sleep(2.5)
-    print(
-        "We're gonna do the tutorial first! Please enter option 1 to start with inventory!"
-    )
-    while go_to == None:
-        try:
-            go_to = int(input(''))
-            if go_to == 1:
-                inv_tutorial()
-            elif go_to == 2:
-                quit()
-            else:
-                print("Please try that again! Put the number 1")
-                go_to = None
-        except ValueError:
-            print("Please try that again! Put the number 1")
+    result = var.mycol.find({"username": var.username})
+    for i in result:
+      if i["pt1"] == False or var.username == "Guest":
+          replit.clear()
+          var.go_to = None
+          print(f"{var.username}'s Shopˏˋ°•*⁀➷")
+          print("--------------------------")
+          print("[1]Inventory\n[2]Orders\n[3]Buy\n[4]Sell")
+          time.sleep(2.5)
+          print(colored(f"This is your own shop! You can check your inventory..","cyan"))
+          time.sleep(2.5)
+          print(colored("Buy things!", "green"))
+          time.sleep(2.5)
+          print(colored("Check incoming orders! And so much more! (Coming soon..)","red"))
+          time.sleep(2.5)
+          print("We're gonna do the tutorial first! Please enter option 1 to start with inventory!")
+          while var.go_to == None:
+            try:
+               var.go_to = int(input(''))
+               if var.go_to == 1:
+                   inv_tutorial()
+               else:
+                 print("Please try again and put 1")
+                 var.go_to = None
+            except ValueError:
+               print("Please try that again! Put the number 1")
+               var.go_to = None
+      elif i["pt2"] == False or var.username == "Guest":
+          var.go_to = None
+          time.sleep(1)
+          print("\nGood Job! Now that you've seen the inventory, you can learn to sell items!")
+          time.sleep(2.5)
+          replit.clear()
+          print(f"{var.username}'s Shopˏˋ°•*⁀➷")
+          print("--------------------------")
+          print("[1]Inventory\n[2]Orders\n[3]Buy\n[4]Sell")
+          time.sleep(1)
+          print("\nNow, select 2 to see orders")
+          try:
+               var.go_to = int(input(''))
+               if var.go_to == 2:
+                   or_tutorial()
+               else:
+                 print("Please try again and put 1")
+                 var.go_to = None
+          except ValueError:
+               print("Please try that again! Put the number 1")
+               var.go_to = None
+        
+        
+ 
 
 #-----------------------------------------------------------
 #Tutorial above
 
 def intro():
-    replit.clear()
-    italics = '\033[3m'
-    end = '\033[0m'
-    print(
-        colored(
-            f"Hey! It's you!! I've been waiting a long bit for you to arrive, {var.username}, right?",
+  result = var.mycol.find({"username": var.username})
+  for i in result:
+    if i["Intro_Passed"] != True:
+      replit.clear()
+      italics = '\033[3m'
+      end = '\033[0m'
+      print(colored(f"Hey! It's you!! I've been waiting a long bit for you to arrive, {var.username}, right?","cyan"))
+      time.sleep(4)
+      print(
+          colored(
+           f"I'm Jade, the very very very amazing shop owner! I'm the best at literally everything I do! I-.. {italics}Jade notices her ranmbling quickly fixes her posture.{end}",
             "cyan"))
-    time.sleep(4)
-    print(
-        colored(
-            f"I'm Jade, the very very very amazing shop owner! I'm the best at literally everything I do! I-.. {italics}Jade notices her ranmbling quickly fixes her posture.{end}",
-            "cyan"))
-    print(
+      print(
         colored(
             "Sorry!! Anyways, you're new around, yeah? I'm excited to see a new shop owner in the making! Check out everything and come back to me when you're ready!",
             "cyan"))
-    time.sleep(7)
-    tutorial()
+      q = {"username": var.username}
+      result = var.mycol.find({"username": var.username})
+      for i in result:
+        if i["Intro_Passed"] == False:
+          var.mycol.update_one(q, { "$set": {"Intro_Passed": True}})
+      time.sleep(10)
+      tutorial()
+      
+    else:
+      tutorial()
 
 
 def guest():
@@ -116,10 +160,11 @@ def login():
     global username
     global password
     global logins
+    replit.clear()
     var.logins = "no"
     tries = 0
     while var.logins != "yes":
-        print(colored("\nUser Login", "green"))
+        print(colored("User Login", "green"))
         var.username = input("Username: ")
         password = input("Password: ")
         try:
@@ -166,6 +211,7 @@ def signup():
     global password
     global logins
     var.username = "."
+    replit.clear()
     print(colored("\nUser SignUp", "green"))
     while var.username != "":
         var.username = input("Username: ")
@@ -181,11 +227,16 @@ def signup():
     userlog = {
         "username": var.username,
         "password": var.password,
-        "Tutorial_Passed": var.tutorial_passed
+        "Tutorial_Passed": var.tutorial_passed,
+        "Intro_Passed":var.intro_passed,
+        "pt1": var.pt1,
+        "pt2": var.pt2,
+        "pt3": var.pt3,
+        "pt4": var.pt4
     }
     var.mycol.insert_one(userlog)
     replit.clear()
-    logins = "No"
+    var.logins = "No"
     print("Finalizing account.")
     time.sleep(1)
     print("Finalizing account..")
@@ -193,7 +244,7 @@ def signup():
     print("Finalizing account...")
     time.sleep(2)
     print("Account Created!")
-    main()
+    menu()
 
 
 # ------------------------------------------------------------
@@ -229,12 +280,17 @@ def menu():
             elif var.username != "Guest":
                 result = var.mycol.find({"username": var.username})
                 for i in result:
-                    if i["Tutorial_Passed"] == "False":
+                    if i["Tutorial_Passed"] == False and i["Intro_Passed"] == False:
                         intro()
+                    else: 
+                      print("Continuing Tutorial...")
+                      time.sleep(1.5)
+                      tutorial()
             else:
               pass
         elif choice == 2:
-            status()
+            options.status()
+            
         else:
             quit()
 
